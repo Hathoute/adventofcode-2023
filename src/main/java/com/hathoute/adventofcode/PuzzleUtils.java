@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
@@ -30,9 +31,29 @@ public final class PuzzleUtils {
     }
 
     public static Stream<Integer> parseNumbers(String numbers, String separator) {
-        return Arrays.stream(numbers.split(separator))
+        return parse(numbers, separator, Integer::parseInt);
+    }
+
+    public static Stream<Long> parseLongs(String numbers, String separator) {
+        return parse(numbers, separator, Long::parseLong);
+    }
+
+    public static <T> Stream<T> parse(String str, String separator, Function<String, T> converter) {
+        return Arrays.stream(str.split(separator))
                 .map(String::trim)
                 .filter(not(String::isBlank))
-                .map(Integer::valueOf);
+                .map(converter);
+    }
+
+    public record Tuple2<T1, T2>(T1 left, T2 right) {
+        public static <V1, V2> Tuple2<V1, V2> of(V1 v1, V2 v2) {
+            return new Tuple2<>(v1, v2);
+        }
+    }
+
+    public record Tuple3<T1, T2, T3>(T1 left, T2 mid, T3 right) {
+        public static <V1, V2, V3> Tuple3<V1, V2, V3> of(V1 v1, V2 v2, V3 v3) {
+            return new Tuple3<>(v1, v2, v3);
+        }
     }
 }
