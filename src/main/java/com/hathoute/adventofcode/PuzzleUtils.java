@@ -1,14 +1,18 @@
 package com.hathoute.adventofcode;
 
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.summingInt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.math3.primes.Primes;
 
 public final class PuzzleUtils {
 
@@ -44,6 +48,13 @@ public final class PuzzleUtils {
                  .map(String::trim)
                  .filter(not(String::isBlank))
                  .map(converter);
+  }
+
+  public static Map<Integer, Integer> primeFactors(final int n) {
+    // Using summingInt() instead of counting() to produce integers since 'n' is int.
+    return Primes.primeFactors(n)
+                 .stream()
+                 .collect(Collectors.groupingBy(Function.identity(), summingInt(t -> 1)));
   }
 
   public record Tuple2<T1, T2>(T1 left, T2 right) {
