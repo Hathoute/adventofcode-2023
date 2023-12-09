@@ -57,6 +57,14 @@ public final class PuzzleUtils {
                  .collect(Collectors.groupingBy(Function.identity(), summingInt(t -> 1)));
   }
 
+  public static <T> T findLast(final List<T> list) {
+    if (list.isEmpty()) {
+      throw new IllegalArgumentException("Provided list cannot be empty");
+    }
+
+    return list.get(list.size() - 1);
+  }
+
   public record Tuple2<T1, T2>(T1 left, T2 right) {
     public static <V1, V2> Tuple2<V1, V2> of(final V1 v1, final V2 v2) {
       return new Tuple2<>(v1, v2);
