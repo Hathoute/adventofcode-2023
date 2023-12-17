@@ -1,5 +1,6 @@
 package com.hathoute.adventofcode;
 
+import static java.util.Objects.nonNull;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.summingInt;
 
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -74,6 +76,38 @@ public final class PuzzleUtils {
   public record Tuple3<T1, T2, T3>(T1 left, T2 mid, T3 right) {
     public static <V1, V2, V3> Tuple3<V1, V2, V3> of(final V1 v1, final V2 v2, final V3 v3) {
       return new Tuple3<>(v1, v2, v3);
+    }
+  }
+
+  public record Either<T1, T2>(T1 left, T2 right) {
+    public Either {
+      if (nonNull(left) == nonNull(right)) {
+        throw new IllegalArgumentException("Either must contain one and only one non-null object");
+      }
+    }
+
+    public void forEither(final Consumer<T1> leftConsumer, final Consumer<T2> rightConsumer) {
+      if (isLeft()) {
+        leftConsumer.accept(left);
+      } else {
+        rightConsumer.accept(right);
+      }
+    }
+
+    public boolean isLeft() {
+      return nonNull(left);
+    }
+
+    public boolean isRight() {
+      return nonNull(right);
+    }
+
+    public static <T1, T2> Either<T1, T2> ofLeft(final T1 left) {
+      return new Either<>(left, null);
+    }
+
+    public static <T1, T2> Either<T1, T2> ofRight(final T2 right) {
+      return new Either<>(null, right);
     }
   }
 }
